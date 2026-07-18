@@ -21,7 +21,8 @@
     "slots:test": "cd services/availability && go test ./..."
   },
   "dependencies": {
-    "@prisma/client": "^6.19.3"
+    "@prisma/client": "^6.19.3",
+    "postcss": "^8.5.10"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
@@ -29,5 +30,11 @@
     "prisma": "^6.19.0",
     "tsx": "^4.20.0",
     "typescript": "^5.9.0"
+  },
+  "overrides": {
+    "postcss": "^8.5.10",
+    "next": {
+      "postcss": "^8.5.10"
+    }
   }
 }
