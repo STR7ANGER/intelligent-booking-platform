@@ -7,9 +7,9 @@ Complete tasks in order unless a dependency is explicitly removed. Each day has 
 - [x] 1. Design workspace, Docker, CI, domain glossary, and time-zone policy; write acceptance criteria, contracts, risks, and the smallest vertical slice.
 - [x] 2. Implement workspace, Docker, CI, domain glossary, and time-zone policy; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 - [x] 3. Verify workspace, Docker, CI, domain glossary, and time-zone policy with tests, failure cases, telemetry, documentation, and a reviewable demo.
-- [ ] 4. Design organizations, locations, resources, providers, RBAC, and admin UI; write acceptance criteria, contracts, risks, and the smallest vertical slice.
-- [ ] 5. Implement organizations, locations, resources, providers, RBAC, and admin UI; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
-- [ ] 6. Verify organizations, locations, resources, providers, RBAC, and admin UI with tests, failure cases, telemetry, documentation, and a reviewable demo.
+- [x] 4. Design organizations, locations, resources, providers, RBAC, and admin UI; write acceptance criteria, contracts, risks, and the smallest vertical slice.
+- [x] 5. Implement organizations, locations, resources, providers, RBAC, and admin UI; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
+- [x] 6. Verify organizations, locations, resources, providers, RBAC, and admin UI with tests, failure cases, telemetry, documentation, and a reviewable demo.
 - [ ] 7. Design recurring availability rules and Go slot-generation engine; write acceptance criteria, contracts, risks, and the smallest vertical slice.
 - [ ] 8. Implement recurring availability rules and Go slot-generation engine; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 - [ ] 9. Verify recurring availability rules and Go slot-generation engine with tests, failure cases, telemetry, documentation, and a reviewable demo.

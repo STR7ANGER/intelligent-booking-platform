@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ResourceKind {
+  COURT
+  ROOM
+  DESK
+  EQUIPMENT
+}
+
+enum ProviderStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Organization {
+  id        String     @id @default(cuid())
+  slug      String     @unique
+  name      String
+  locations Location[]
+  resources Resource[]
+  providers Provider[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Location {
+  id             String       @id @default(cuid())
+  organizationId String
+  name           String
+  timeZone       String
+  address        String?
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  resources      Resource[]
+  providers      Provider[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([organizationId, name])
+  @@index([organizationId, timeZone])
+}
+
+model Resource {
+  id             String       @id @default(cuid())
+  organizationId String
+  locationId     String
+  name           String
+  kind           ResourceKind
+  capacity       Int          @default(1)
+  active         Boolean      @default(true)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  location       Location     @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([locationId, name])
+  @@index([organizationId, active])
+}
+
+model Provider {
+  id             String         @id @default(cuid())
+  organizationId String
+  locationId     String?
+  displayName    String
+  email          String
+  status         ProviderStatus @default(ACTIVE)
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  location       Location?      @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@unique([organizationId, email])
+  @@index([organizationId, status])
+}
