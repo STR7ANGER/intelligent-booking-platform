@@ -46,18 +46,37 @@ model Location {
   @@index([organizationId, timeZone])
 }
 
+model AvailabilityRule {
+  id               String    @id @default(cuid())
+  organizationId   String
+  resourceId       String
+  weekday          Int
+  startMinute      Int
+  endMinute        Int
+  slotMinutes      Int
+  effectiveFrom    DateTime  @db.Date
+  effectiveUntil   DateTime? @db.Date
+  utcOffsetMinutes Int?
+  resource         Resource  @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([organizationId, resourceId, weekday, effectiveFrom])
+}
+
 model Resource {
-  id             String       @id @default(cuid())
-  organizationId String
-  locationId     String
-  name           String
-  kind           ResourceKind
-  capacity       Int          @default(1)
-  active         Boolean      @default(true)
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  location       Location     @relation(fields: [locationId], references: [id], onDelete: Cascade)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id                String             @id @default(cuid())
+  organizationId    String
+  locationId        String
+  name              String
+  kind              ResourceKind
+  capacity          Int                @default(1)
+  active            Boolean            @default(true)
+  organization      Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  location          Location           @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  availabilityRules AvailabilityRule[]
 
   @@unique([locationId, name])
   @@index([organizationId, active])
