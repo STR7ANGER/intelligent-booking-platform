@@ -7,6 +7,8 @@ import { AdminService } from "./modules/admin/service.js";
 import { PrismaBookingRepository } from "./modules/bookings/prisma-repository.js";
 import { RedisHoldStore } from "./modules/bookings/redis-holds.js";
 import { BookingService } from "./modules/bookings/service.js";
+import { PrismaCommercialRepository } from "./modules/commercial/prisma-repository.js";
+import { CommercialService } from "./modules/commercial/service.js";
 import { PrismaCustomerRepository } from "./modules/customer/prisma-repository.js";
 import { CustomerService } from "./modules/customer/service.js";
 
@@ -30,12 +32,14 @@ const bookings = new BookingService(holds, new PrismaBookingRepository(), {
   record: (event) => console.info(JSON.stringify({ level: "info", ...event })),
 });
 const customer = new CustomerService(new PrismaCustomerRepository(), holds);
+const commercial = new CommercialService(new PrismaCommercialRepository());
 serve({
   fetch: createApp({
     adminService: admin,
     adminKey: environment.ADMIN_API_KEY,
     bookingService: bookings,
     customerService: customer,
+    commercialService: commercial,
   }).fetch,
   port: environment.PORT,
 });

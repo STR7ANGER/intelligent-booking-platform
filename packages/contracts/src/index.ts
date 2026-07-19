@@ -46,3 +46,32 @@ export const rescheduleBookingSchema = z.object({
   endsAt: z.iso.datetime({ offset: true }),
   holdToken: z.string().min(32).max(200),
 });
+export const waitlistInputSchema = slotHoldSchema
+  .pick({ organizationId: true, resourceId: true, startsAt: true })
+  .extend({
+    customerName: z.string().trim().min(2).max(100),
+    customerEmail: z.email(),
+  });
+export const quoteInputSchema = z.object({
+  organizationId: z.string().min(1),
+  resourceId: z.string().min(1),
+  startsAt: z.iso.datetime({ offset: true }),
+  basePriceMinor: z.number().int().min(0).max(10_000_000),
+  customerEmail: z.email().optional(),
+});
+export const membershipPlanSchema = z.object({
+  organizationId: z.string().min(1),
+  name: identifierSchema,
+  discountBps: z.number().int().min(0).max(9000),
+  monthlyPriceMinor: z.number().int().min(0),
+  includedCredits: z.number().int().min(0).max(1000),
+});
+export const pricingRuleSchema = z.object({
+  organizationId: z.string().min(1),
+  resourceId: z.string().min(1).optional(),
+  name: identifierSchema,
+  adjustmentBps: z.number().int().min(-9000).max(20000),
+  startsAt: z.iso.datetime({ offset: true }).optional(),
+  endsAt: z.iso.datetime({ offset: true }).optional(),
+  priority: z.number().int().min(0).max(1000).default(100),
+});

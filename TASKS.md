@@ -25,8 +25,8 @@ Complete tasks in order unless a dependency is explicitly removed. Each day has 
 - [x] 16. Design cancellation, rescheduling, refunds, and policy evaluation; write acceptance criteria, contracts, risks, and the smallest vertical slice.
 - [x] 17. Implement cancellation, rescheduling, refunds, and policy evaluation; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 - [x] 18. Verify cancellation, rescheduling, refunds, and policy evaluation with tests, failure cases, telemetry, documentation, and a reviewable demo.
-- [ ] 19. Design waitlists, memberships, packages, and dynamic-pricing rules; write acceptance criteria, contracts, risks, and the smallest vertical slice.
-- [ ] 20. Implement waitlists, memberships, packages, and dynamic-pricing rules; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
+- [x] 19. Design waitlists, memberships, packages, and dynamic-pricing rules; write acceptance criteria, contracts, risks, and the smallest vertical slice.
+- [x] 20. Implement waitlists, memberships, packages, and dynamic-pricing rules; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 
 ## Day 3 — Advanced behavior and production hardening (Tasks 21–30)
 

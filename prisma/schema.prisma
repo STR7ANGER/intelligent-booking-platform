@@ -24,6 +24,18 @@ enum BookingStatus {
   CANCELLED
 }
 
+enum WaitlistStatus {
+  WAITING
+  PROMOTED
+  CANCELLED
+}
+
+enum MembershipStatus {
+  ACTIVE
+  PAUSED
+  CANCELLED
+}
+
 model Organization {
   id                 String              @id @default(cuid())
   slug               String              @unique
@@ -33,6 +45,12 @@ model Organization {
   providers          Provider[]
   bookings           Booking[]
   idempotencyRecords IdempotencyRecord[]
+  waitlistEntries    WaitlistEntry[]
+  membershipPlans    MembershipPlan[]
+  memberships        Membership[]
+  servicePackages    ServicePackage[]
+  packageBalances    PackageBalance[]
+  pricingRules       PricingRule[]
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
 }
@@ -85,9 +103,98 @@ model Resource {
   updatedAt         DateTime           @updatedAt
   availabilityRules AvailabilityRule[]
   bookings          Booking[]
+  waitlistEntries   WaitlistEntry[]
+  pricingRules      PricingRule[]
 
   @@unique([locationId, name])
   @@index([organizationId, active])
+}
+
+model WaitlistEntry {
+  id             String         @id @default(cuid())
+  organizationId String
+  resourceId     String
+  startsAt       DateTime
+  customerName   String
+  customerEmail  String
+  status         WaitlistStatus @default(WAITING)
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  resource       Resource       @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  createdAt      DateTime       @default(now())
+
+  @@unique([resourceId, startsAt, customerEmail])
+  @@index([organizationId, status, startsAt])
+}
+
+model MembershipPlan {
+  id                String       @id @default(cuid())
+  organizationId    String
+  name              String
+  discountBps       Int          @default(0)
+  monthlyPriceMinor Int
+  includedCredits   Int          @default(0)
+  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  memberships       Membership[]
+  createdAt         DateTime     @default(now())
+
+  @@unique([organizationId, name])
+}
+
+model Membership {
+  id               String           @id @default(cuid())
+  organizationId   String
+  planId           String
+  customerEmail    String
+  remainingCredits Int              @default(0)
+  status           MembershipStatus @default(ACTIVE)
+  organization     Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  plan             MembershipPlan   @relation(fields: [planId], references: [id], onDelete: Restrict)
+  createdAt        DateTime         @default(now())
+
+  @@unique([organizationId, customerEmail])
+}
+
+model ServicePackage {
+  id             String           @id @default(cuid())
+  organizationId String
+  name           String
+  credits        Int
+  priceMinor     Int
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  balances       PackageBalance[]
+  createdAt      DateTime         @default(now())
+
+  @@unique([organizationId, name])
+}
+
+model PackageBalance {
+  id               String         @id @default(cuid())
+  organizationId   String
+  packageId        String
+  customerEmail    String
+  remainingCredits Int
+  organization     Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  package          ServicePackage @relation(fields: [packageId], references: [id], onDelete: Restrict)
+  createdAt        DateTime       @default(now())
+
+  @@unique([packageId, customerEmail])
+}
+
+model PricingRule {
+  id             String       @id @default(cuid())
+  organizationId String
+  resourceId     String?
+  name           String
+  adjustmentBps  Int
+  startsAt       DateTime?
+  endsAt         DateTime?
+  priority       Int          @default(100)
+  active         Boolean      @default(true)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  resource       Resource?    @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId, resourceId, active, priority])
 }
 
 model Booking {
