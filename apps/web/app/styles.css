@@ -125,6 +125,9 @@ select {
   background: var(--lime);
   padding: 12px;
 }
+.danger {
+  background: #8f1d14;
+}
 .list {
   display: grid;
   gap: 10px;

@@ -6,7 +6,10 @@ export default function BookPage() {
     <main>
       <nav>
         <Link href="/">SLOTWISE</Link>
-        <Link href="/admin">Admin</Link>
+        <span>
+          <Link href="/manage">Manage booking</Link> ·{" "}
+          <Link href="/admin">Admin</Link>
+        </span>
       </nav>
       <header className="page-header">
         <p className="eyebrow">CUSTOMER BOOKING</p>
