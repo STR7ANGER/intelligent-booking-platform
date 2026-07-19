@@ -3,9 +3,15 @@ import { cors } from "hono/cors";
 import { requestId } from "hono/request-id";
 import { createAdminRoutes } from "./modules/admin/routes.js";
 import type { AdminService } from "./modules/admin/service.js";
+import { createBookingRoutes } from "./modules/bookings/routes.js";
+import type { BookingService } from "./modules/bookings/service.js";
 
 export const createApp = (
-  options: { adminService?: AdminService; adminKey?: string } = {},
+  options: {
+    adminService?: AdminService;
+    adminKey?: string;
+    bookingService?: BookingService;
+  } = {},
 ) => {
   const app = new Hono();
   app.use("*", requestId());
@@ -43,5 +49,7 @@ export const createApp = (
       "/v1/admin",
       createAdminRoutes(options.adminService, options.adminKey),
     );
+  if (options.bookingService)
+    app.route("/v1/bookings", createBookingRoutes(options.bookingService));
   return app;
 };

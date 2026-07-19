@@ -27,3 +27,14 @@ export const providerInputSchema = z.object({
   displayName: identifierSchema,
   email: z.email(),
 });
+export const slotHoldSchema = z.object({
+  organizationId: z.string().min(1),
+  resourceId: z.string().min(1),
+  startsAt: z.iso.datetime({ offset: true }),
+  endsAt: z.iso.datetime({ offset: true }),
+});
+export const bookingInputSchema = slotHoldSchema.extend({
+  holdToken: z.string().min(32).max(200),
+  customerName: z.string().trim().min(2).max(100),
+  customerEmail: z.email(),
+});

@@ -1,7 +1,7 @@
-# Slot holds and booking transaction design
+# Booking concurrency
 
-Task 10 freezes the next vertical-slice contract. A hold uses Redis key `hold:{organizationId}:{resourceId}:{startsAtUtc}` with `SET NX PX`, a random opaque token, and a maximum five-minute TTL. Release and renewal use Lua compare-and-delete/expire scripts so one customer cannot alter another hold.
+Clients first acquire a five-minute Redis hold for an organization, resource, and UTC start instant. Redis `SET NX PX` makes competing hold requests atomic. Checkout requires that opaque hold token and an `Idempotency-Key` header.
 
-`POST /v1/bookings` requires an idempotency key, hold token, resource, UTC interval, and customer. PostgreSQL stores the idempotency response and booking in one `SERIALIZABLE` transaction. An exclusion constraint or equivalent overlap guard is the final double-booking defense; Redis improves UX but is never the source of truth. Serialization failures retry with bounded jitter, and identical idempotency keys return the original response.
+The API hashes hold, access, and idempotency tokens before persistence or comparison. It checks an existing idempotency result before validating the hold so a safe retry still works after the successful request releases its hold. PostgreSQL's unique `(resourceId, startsAt)` constraint is the final double-booking guard inside a serializable transaction.
 
-Concurrency verification will race multiple holds and booking commits for the same slot, assert exactly one winner, test expired/wrong tokens, Redis loss, request replay, tenant mismatch, and database retry exhaustion. Logs contain correlation/idempotency hashes—not raw tokens or customer data.
+Expected failures are `SLOT_HELD`, `INVALID_HOLD`, `SLOT_UNAVAILABLE`, and `IDEMPOTENCY_MISMATCH`. Structured telemetry contains tenant identifiers and event names, never customer email or credentials.

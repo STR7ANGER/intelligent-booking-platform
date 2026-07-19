@@ -19,15 +19,22 @@ enum ProviderStatus {
   INACTIVE
 }
 
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+}
+
 model Organization {
-  id        String     @id @default(cuid())
-  slug      String     @unique
-  name      String
-  locations Location[]
-  resources Resource[]
-  providers Provider[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id                 String              @id @default(cuid())
+  slug               String              @unique
+  name               String
+  locations          Location[]
+  resources          Resource[]
+  providers          Provider[]
+  bookings           Booking[]
+  idempotencyRecords IdempotencyRecord[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
 }
 
 model Location {
@@ -77,9 +84,42 @@ model Resource {
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   availabilityRules AvailabilityRule[]
+  bookings          Booking[]
 
   @@unique([locationId, name])
   @@index([organizationId, active])
+}
+
+model Booking {
+  id              String        @id @default(cuid())
+  organizationId  String
+  resourceId      String
+  customerName    String
+  customerEmail   String
+  accessTokenHash String        @unique
+  startsAt        DateTime
+  endsAt          DateTime
+  status          BookingStatus @default(CONFIRMED)
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  resource        Resource      @relation(fields: [resourceId], references: [id], onDelete: Restrict)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([resourceId, startsAt])
+  @@index([organizationId, customerEmail, startsAt])
+}
+
+model IdempotencyRecord {
+  id             String       @id @default(cuid())
+  organizationId String
+  keyHash        String
+  requestHash    String
+  bookingId      String
+  response       Json
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+
+  @@unique([organizationId, keyHash])
 }
 
 model Provider {

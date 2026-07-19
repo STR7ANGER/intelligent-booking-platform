@@ -17,8 +17,8 @@ Complete tasks in order unless a dependency is explicitly removed. Each day has 
 
 ## Day 2 — Core workflows and integrations (Tasks 11–20)
 
-- [ ] 11. Implement Redis slot holds, booking transaction, idempotency, and concurrency tests; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
-- [ ] 12. Verify Redis slot holds, booking transaction, idempotency, and concurrency tests with tests, failure cases, telemetry, documentation, and a reviewable demo.
+- [x] 11. Implement Redis slot holds, booking transaction, idempotency, and concurrency tests; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
+- [x] 12. Verify Redis slot holds, booking transaction, idempotency, and concurrency tests with tests, failure cases, telemetry, documentation, and a reviewable demo.
 - [ ] 13. Design customer search, checkout, confirmation, and booking management screens; write acceptance criteria, contracts, risks, and the smallest vertical slice.
 - [ ] 14. Implement customer search, checkout, confirmation, and booking management screens; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 - [ ] 15. Verify customer search, checkout, confirmation, and booking management screens with tests, failure cases, telemetry, documentation, and a reviewable demo.
