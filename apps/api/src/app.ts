@@ -5,12 +5,15 @@ import { createAdminRoutes } from "./modules/admin/routes.js";
 import type { AdminService } from "./modules/admin/service.js";
 import { createBookingRoutes } from "./modules/bookings/routes.js";
 import type { BookingService } from "./modules/bookings/service.js";
+import { createCustomerRoutes } from "./modules/customer/routes.js";
+import type { CustomerService } from "./modules/customer/service.js";
 
 export const createApp = (
   options: {
     adminService?: AdminService;
     adminKey?: string;
     bookingService?: BookingService;
+    customerService?: CustomerService;
   } = {},
 ) => {
   const app = new Hono();
@@ -51,5 +54,7 @@ export const createApp = (
     );
   if (options.bookingService)
     app.route("/v1/bookings", createBookingRoutes(options.bookingService));
+  if (options.customerService)
+    app.route("/v1/customer", createCustomerRoutes(options.customerService));
   return app;
 };

@@ -7,6 +7,8 @@ import { AdminService } from "./modules/admin/service.js";
 import { PrismaBookingRepository } from "./modules/bookings/prisma-repository.js";
 import { RedisHoldStore } from "./modules/bookings/redis-holds.js";
 import { BookingService } from "./modules/bookings/service.js";
+import { PrismaCustomerRepository } from "./modules/customer/prisma-repository.js";
+import { CustomerService } from "./modules/customer/service.js";
 
 const environment = parseEnvironment(process.env);
 const admin = new AdminService(new PrismaAdminRepository(), {
@@ -23,19 +25,17 @@ redis.on("error", (error) =>
   ),
 );
 await redis.connect();
-const bookings = new BookingService(
-  new RedisHoldStore(redis),
-  new PrismaBookingRepository(),
-  {
-    record: (event) =>
-      console.info(JSON.stringify({ level: "info", ...event })),
-  },
-);
+const holds = new RedisHoldStore(redis);
+const bookings = new BookingService(holds, new PrismaBookingRepository(), {
+  record: (event) => console.info(JSON.stringify({ level: "info", ...event })),
+});
+const customer = new CustomerService(new PrismaCustomerRepository(), holds);
 serve({
   fetch: createApp({
     adminService: admin,
     adminKey: environment.ADMIN_API_KEY,
     bookingService: bookings,
+    customerService: customer,
   }).fetch,
   port: environment.PORT,
 });

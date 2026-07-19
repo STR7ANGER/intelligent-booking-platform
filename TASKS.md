@@ -19,12 +19,12 @@ Complete tasks in order unless a dependency is explicitly removed. Each day has 
 
 - [x] 11. Implement Redis slot holds, booking transaction, idempotency, and concurrency tests; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 - [x] 12. Verify Redis slot holds, booking transaction, idempotency, and concurrency tests with tests, failure cases, telemetry, documentation, and a reviewable demo.
-- [ ] 13. Design customer search, checkout, confirmation, and booking management screens; write acceptance criteria, contracts, risks, and the smallest vertical slice.
-- [ ] 14. Implement customer search, checkout, confirmation, and booking management screens; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
-- [ ] 15. Verify customer search, checkout, confirmation, and booking management screens with tests, failure cases, telemetry, documentation, and a reviewable demo.
-- [ ] 16. Design cancellation, rescheduling, refunds, and policy evaluation; write acceptance criteria, contracts, risks, and the smallest vertical slice.
-- [ ] 17. Implement cancellation, rescheduling, refunds, and policy evaluation; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
-- [ ] 18. Verify cancellation, rescheduling, refunds, and policy evaluation with tests, failure cases, telemetry, documentation, and a reviewable demo.
+- [x] 13. Design customer search, checkout, confirmation, and booking management screens; write acceptance criteria, contracts, risks, and the smallest vertical slice.
+- [x] 14. Implement customer search, checkout, confirmation, and booking management screens; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
+- [x] 15. Verify customer search, checkout, confirmation, and booking management screens with tests, failure cases, telemetry, documentation, and a reviewable demo.
+- [x] 16. Design cancellation, rescheduling, refunds, and policy evaluation; write acceptance criteria, contracts, risks, and the smallest vertical slice.
+- [x] 17. Implement cancellation, rescheduling, refunds, and policy evaluation; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
+- [x] 18. Verify cancellation, rescheduling, refunds, and policy evaluation with tests, failure cases, telemetry, documentation, and a reviewable demo.
 - [ ] 19. Design waitlists, memberships, packages, and dynamic-pricing rules; write acceptance criteria, contracts, risks, and the smallest vertical slice.
 - [ ] 20. Implement waitlists, memberships, packages, and dynamic-pricing rules; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 

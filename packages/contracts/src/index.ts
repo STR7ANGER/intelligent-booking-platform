@@ -38,3 +38,11 @@ export const bookingInputSchema = slotHoldSchema.extend({
   customerName: z.string().trim().min(2).max(100),
   customerEmail: z.email(),
 });
+export const cancelBookingSchema = z.object({
+  reason: z.string().trim().max(240).optional(),
+});
+export const rescheduleBookingSchema = z.object({
+  startsAt: z.iso.datetime({ offset: true }),
+  endsAt: z.iso.datetime({ offset: true }),
+  holdToken: z.string().min(32).max(200),
+});

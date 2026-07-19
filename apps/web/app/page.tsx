@@ -4,7 +4,10 @@ export default function Home() {
     <main>
       <nav>
         <strong>SLOTWISE</strong>
-        <Link href="/admin">Open console</Link>
+        <span>
+          <Link href="/book">Book now</Link> ·{" "}
+          <Link href="/admin">Open console</Link>
+        </span>
       </nav>
       <section className="hero">
         <p className="eyebrow">BOOKING WITHOUT TIME-ZONE SURPRISES</p>
@@ -13,8 +16,8 @@ export default function Home() {
           Manage courts, studios, trainers, and schedules with explicit local
           time and UTC-safe booking records.
         </p>
-        <Link className="primary" href="/admin">
-          Configure locations
+        <Link className="primary" href="/book">
+          Find a resource
         </Link>
       </section>
       <section className="grid">
