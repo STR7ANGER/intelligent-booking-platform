@@ -75,3 +75,30 @@ export const pricingRuleSchema = z.object({
   endsAt: z.iso.datetime({ offset: true }).optional(),
   priority: z.number().int().min(0).max(1000).default(100),
 });
+export const paymentWebhookSchema = z.object({
+  eventId: z.string().min(1).max(200),
+  externalPaymentId: z.string().min(1).max(200),
+  bookingId: z.string().min(1),
+  status: z.enum(["SUCCEEDED", "FAILED", "REFUNDED"]),
+  amountMinor: z.number().int().min(0).max(10_000_000),
+  currency: z
+    .string()
+    .length(3)
+    .transform((value) => value.toUpperCase()),
+});
+export const reconciliationSchema = z.object({
+  observations: z
+    .array(
+      z.object({
+        externalPaymentId: z.string().min(1).max(200),
+        status: z.enum(["PENDING", "SUCCEEDED", "FAILED", "REFUNDED"]),
+        amountMinor: z.number().int().min(0).max(10_000_000),
+      }),
+    )
+    .min(1)
+    .max(500),
+});
+export const jobCompletionSchema = z.object({
+  succeeded: z.boolean(),
+  errorCode: z.string().trim().min(1).max(80).optional(),
+});

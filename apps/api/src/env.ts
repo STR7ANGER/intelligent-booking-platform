@@ -11,6 +11,7 @@ const schema = z.object({
   REDIS_URL: z.string().url(),
   SESSION_SECRET: z.string().min(32),
   ADMIN_API_KEY: z.string().min(32),
+  PAYMENT_WEBHOOK_SECRET: z.string().min(32),
   DEFAULT_TIME_ZONE: z.string().refine((zone) => {
     try {
       new Intl.DateTimeFormat("en", { timeZone: zone });

@@ -11,6 +11,8 @@ import { PrismaCommercialRepository } from "./modules/commercial/prisma-reposito
 import { CommercialService } from "./modules/commercial/service.js";
 import { PrismaCustomerRepository } from "./modules/customer/prisma-repository.js";
 import { CustomerService } from "./modules/customer/service.js";
+import { PrismaIntegrationRepository } from "./modules/integrations/prisma-repository.js";
+import { IntegrationService } from "./modules/integrations/service.js";
 
 const environment = parseEnvironment(process.env);
 const admin = new AdminService(new PrismaAdminRepository(), {
@@ -32,7 +34,17 @@ const bookings = new BookingService(holds, new PrismaBookingRepository(), {
   record: (event) => console.info(JSON.stringify({ level: "info", ...event })),
 });
 const customer = new CustomerService(new PrismaCustomerRepository(), holds);
-const commercial = new CommercialService(new PrismaCommercialRepository());
+const commercial = new CommercialService(new PrismaCommercialRepository(), {
+  record: (event) => console.info(JSON.stringify({ level: "info", ...event })),
+});
+const integrations = new IntegrationService(
+  new PrismaIntegrationRepository(),
+  environment.PAYMENT_WEBHOOK_SECRET,
+  {
+    record: (event) =>
+      console.info(JSON.stringify({ level: "info", ...event })),
+  },
+);
 serve({
   fetch: createApp({
     adminService: admin,
@@ -40,6 +52,7 @@ serve({
     bookingService: bookings,
     customerService: customer,
     commercialService: commercial,
+    integrationService: integrations,
   }).fetch,
   port: environment.PORT,
 });

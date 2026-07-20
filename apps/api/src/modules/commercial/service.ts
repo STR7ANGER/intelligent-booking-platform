@@ -74,7 +74,12 @@ export function calculateQuote(
   };
 }
 export class CommercialService {
-  constructor(private repository: CommercialRepository) {}
+  constructor(
+    private repository: CommercialRepository,
+    private telemetry: { record(event: Record<string, unknown>): void } = {
+      record: () => undefined,
+    },
+  ) {}
   async joinWaitlist(raw: unknown) {
     const input = waitlistInputSchema.parse(raw);
     const result = await this.repository.joinWaitlist({
@@ -86,6 +91,11 @@ export class CommercialService {
       throw new BookingError("ALREADY_WAITLISTED", 409);
     if (result === "RESOURCE_MISMATCH")
       throw new BookingError("RESOURCE_UNAVAILABLE", 404);
+    this.telemetry.record({
+      event: "waitlist.joined",
+      organizationId: input.organizationId,
+      resourceId: input.resourceId,
+    });
     return result;
   }
   async quote(raw: unknown) {
@@ -96,7 +106,7 @@ export class CommercialService {
       input.customerEmail?.toLowerCase(),
       new Date(input.startsAt),
     );
-    return {
+    const quote = {
       ...calculateQuote(
         input.basePriceMinor,
         benefits.membershipDiscountBps,
@@ -104,6 +114,13 @@ export class CommercialService {
       ),
       packageCreditsAvailable: benefits.packageCredits,
     };
+    this.telemetry.record({
+      event: "pricing.quoted",
+      organizationId: input.organizationId,
+      resourceId: input.resourceId,
+      appliedRuleCount: benefits.rules.length,
+    });
+    return quote;
   }
   createPlan(raw: unknown) {
     return this.repository.createPlan(membershipPlanSchema.parse(raw));

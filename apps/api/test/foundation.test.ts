@@ -9,6 +9,7 @@ const env = {
   REDIS_URL: "redis://localhost:6379",
   SESSION_SECRET: "a-secure-session-secret-over-32-characters",
   ADMIN_API_KEY: "a-separate-admin-api-key-over-32-characters",
+  PAYMENT_WEBHOOK_SECRET: "a-separate-webhook-secret-over-32-characters",
   DEFAULT_TIME_ZONE: "Asia/Kolkata",
 };
 describe("foundation", () => {

@@ -36,6 +36,26 @@ enum MembershipStatus {
   CANCELLED
 }
 
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+enum IntegrationJobKind {
+  CALENDAR_UPSERT
+  REMINDER_24H
+  REMINDER_1H
+}
+
+enum IntegrationJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
 model Organization {
   id                 String              @id @default(cuid())
   slug               String              @unique
@@ -198,26 +218,69 @@ model PricingRule {
 }
 
 model Booking {
-  id              String        @id @default(cuid())
+  id              String           @id @default(cuid())
   organizationId  String
   resourceId      String
   customerName    String
   customerEmail   String
-  accessTokenHash String        @unique
+  accessTokenHash String           @unique
   startsAt        DateTime
   endsAt          DateTime
-  status          BookingStatus @default(CONFIRMED)
-  priceMinor      Int           @default(0)
-  currency        String        @default("USD")
+  status          BookingStatus    @default(CONFIRMED)
+  priceMinor      Int              @default(0)
+  currency        String           @default("USD")
   cancelledAt     DateTime?
   refundMinor     Int?
-  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  resource        Resource      @relation(fields: [resourceId], references: [id], onDelete: Restrict)
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  resource        Resource         @relation(fields: [resourceId], references: [id], onDelete: Restrict)
+  payment         Payment?
+  integrationJobs IntegrationJob[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 
   @@unique([resourceId, startsAt])
   @@index([organizationId, customerEmail, startsAt])
+}
+
+model Payment {
+  id                String         @id @default(cuid())
+  bookingId         String         @unique
+  externalPaymentId String         @unique
+  amountMinor       Int
+  currency          String
+  status            PaymentStatus  @default(PENDING)
+  booking           Booking        @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  events            PaymentEvent[]
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  @@index([status, updatedAt])
+}
+
+model PaymentEvent {
+  id              String   @id @default(cuid())
+  providerEventId String   @unique
+  paymentId       String
+  payloadHash     String
+  payment         Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+}
+
+model IntegrationJob {
+  id          String               @id @default(cuid())
+  bookingId   String
+  kind        IntegrationJobKind
+  scheduledAt DateTime
+  status      IntegrationJobStatus @default(PENDING)
+  attempts    Int                  @default(0)
+  lockedAt    DateTime?
+  lastError   String?
+  booking     Booking              @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  @@unique([bookingId, kind])
+  @@index([status, scheduledAt])
 }
 
 model IdempotencyRecord {

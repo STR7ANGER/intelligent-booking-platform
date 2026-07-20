@@ -30,10 +30,10 @@ Complete tasks in order unless a dependency is explicitly removed. Each day has 
 
 ## Day 3 — Advanced behavior and production hardening (Tasks 21–30)
 
-- [ ] 21. Verify waitlists, memberships, packages, and dynamic-pricing rules with tests, failure cases, telemetry, documentation, and a reviewable demo.
-- [ ] 22. Design payment webhooks, reconciliation, calendar sync, and reminders; write acceptance criteria, contracts, risks, and the smallest vertical slice.
-- [ ] 23. Implement payment webhooks, reconciliation, calendar sync, and reminders; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
-- [ ] 24. Verify payment webhooks, reconciliation, calendar sync, and reminders with tests, failure cases, telemetry, documentation, and a reviewable demo.
+- [x] 21. Verify waitlists, memberships, packages, and dynamic-pricing rules with tests, failure cases, telemetry, documentation, and a reviewable demo.
+- [x] 22. Design payment webhooks, reconciliation, calendar sync, and reminders; write acceptance criteria, contracts, risks, and the smallest vertical slice.
+- [x] 23. Implement payment webhooks, reconciliation, calendar sync, and reminders; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
+- [x] 24. Verify payment webhooks, reconciliation, calendar sync, and reminders with tests, failure cases, telemetry, documentation, and a reviewable demo.
 - [ ] 25. Design Gemini slot recommendations, analytics, observability, and accessibility; write acceptance criteria, contracts, risks, and the smallest vertical slice.
 - [ ] 26. Implement Gemini slot recommendations, analytics, observability, and accessibility; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 - [ ] 27. Verify Gemini slot recommendations, analytics, observability, and accessibility with tests, failure cases, telemetry, documentation, and a reviewable demo.

@@ -9,6 +9,8 @@ import { createCommercialRoutes } from "./modules/commercial/routes.js";
 import type { CommercialService } from "./modules/commercial/service.js";
 import { createCustomerRoutes } from "./modules/customer/routes.js";
 import type { CustomerService } from "./modules/customer/service.js";
+import { createIntegrationRoutes } from "./modules/integrations/routes.js";
+import type { IntegrationService } from "./modules/integrations/service.js";
 
 export const createApp = (
   options: {
@@ -17,6 +19,7 @@ export const createApp = (
     bookingService?: BookingService;
     customerService?: CustomerService;
     commercialService?: CommercialService;
+    integrationService?: IntegrationService;
   } = {},
 ) => {
   const app = new Hono();
@@ -63,6 +66,11 @@ export const createApp = (
     app.route(
       "/v1/commercial",
       createCommercialRoutes(options.commercialService, options.adminKey),
+    );
+  if (options.integrationService && options.adminKey)
+    app.route(
+      "/v1/integrations",
+      createIntegrationRoutes(options.integrationService, options.adminKey),
     );
   return app;
 };
