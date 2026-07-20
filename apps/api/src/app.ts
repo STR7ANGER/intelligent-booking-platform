@@ -1,8 +1,11 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { requestId } from "hono/request-id";
+import type { Metrics } from "./infra/metrics.js";
 import { createAdminRoutes } from "./modules/admin/routes.js";
 import type { AdminService } from "./modules/admin/service.js";
+import { createAnalyticsRoutes } from "./modules/analytics/routes.js";
+import type { AnalyticsService } from "./modules/analytics/service.js";
 import { createBookingRoutes } from "./modules/bookings/routes.js";
 import type { BookingService } from "./modules/bookings/service.js";
 import { createCommercialRoutes } from "./modules/commercial/routes.js";
@@ -11,6 +14,8 @@ import { createCustomerRoutes } from "./modules/customer/routes.js";
 import type { CustomerService } from "./modules/customer/service.js";
 import { createIntegrationRoutes } from "./modules/integrations/routes.js";
 import type { IntegrationService } from "./modules/integrations/service.js";
+import { createRecommendationRoutes } from "./modules/recommendations/routes.js";
+import type { RecommendationService } from "./modules/recommendations/service.js";
 
 export const createApp = (
   options: {
@@ -20,6 +25,10 @@ export const createApp = (
     customerService?: CustomerService;
     commercialService?: CommercialService;
     integrationService?: IntegrationService;
+    analyticsService?: AnalyticsService;
+    recommendationService?: RecommendationService;
+    metrics?: Metrics;
+    operatorMetricsToken?: string;
   } = {},
 ) => {
   const app = new Hono();
@@ -53,6 +62,16 @@ export const createApp = (
       timePolicy: "UTC_INSTANT_IANA_ZONE",
     }),
   );
+  if (options.metrics && options.operatorMetricsToken)
+    app.get("/internal/metrics", (context) => {
+      if (
+        context.req.header("authorization") !==
+        `Bearer ${options.operatorMetricsToken}`
+      )
+        return context.json({ error: { code: "FORBIDDEN" } }, 403);
+      context.header("content-type", "text/plain; version=0.0.4");
+      return context.body(options.metrics?.render() ?? "");
+    });
   if (options.adminService && options.adminKey)
     app.route(
       "/v1/admin",
@@ -71,6 +90,16 @@ export const createApp = (
     app.route(
       "/v1/integrations",
       createIntegrationRoutes(options.integrationService, options.adminKey),
+    );
+  if (options.analyticsService && options.adminKey)
+    app.route(
+      "/v1/analytics",
+      createAnalyticsRoutes(options.analyticsService, options.adminKey),
+    );
+  if (options.recommendationService)
+    app.route(
+      "/v1/recommendations",
+      createRecommendationRoutes(options.recommendationService),
     );
   return app;
 };

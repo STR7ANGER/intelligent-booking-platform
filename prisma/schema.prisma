@@ -56,6 +56,15 @@ enum IntegrationJobStatus {
   FAILED
 }
 
+enum AnalyticsEventKind {
+  PAGE_VIEW
+  SEARCH_STARTED
+  SEARCH_EMPTY
+  HOLD_FAILED
+  BOOKING_CONFIRMED
+  BOOKING_CANCELLED
+}
+
 model Organization {
   id                 String              @id @default(cuid())
   slug               String              @unique
@@ -281,6 +290,18 @@ model IntegrationJob {
 
   @@unique([bookingId, kind])
   @@index([status, scheduledAt])
+}
+
+model AnalyticsEvent {
+  id             String             @id @default(cuid())
+  event          AnalyticsEventKind
+  sessionIdHash  String
+  organizationId String?
+  resourceId     String?
+  occurredAt     DateTime           @default(now())
+
+  @@index([organizationId, event, occurredAt])
+  @@index([sessionIdHash, occurredAt])
 }
 
 model IdempotencyRecord {

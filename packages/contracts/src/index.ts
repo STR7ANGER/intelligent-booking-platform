@@ -102,3 +102,34 @@ export const jobCompletionSchema = z.object({
   succeeded: z.boolean(),
   errorCode: z.string().trim().min(1).max(80).optional(),
 });
+export const recommendationInputSchema = z.object({
+  organizationId: z.string().min(1),
+  candidates: z
+    .array(
+      z.object({
+        id: z.string().min(1).max(100),
+        resourceId: z.string().min(1),
+        startsAt: z.iso.datetime({ offset: true }),
+        endsAt: z.iso.datetime({ offset: true }),
+        priceMinor: z.number().int().min(0).max(10_000_000).optional(),
+      }),
+    )
+    .min(1)
+    .max(20),
+  preference: z
+    .enum(["EARLIEST", "LOWEST_PRICE", "BALANCED"])
+    .default("BALANCED"),
+});
+export const analyticsEventSchema = z.object({
+  event: z.enum([
+    "PAGE_VIEW",
+    "SEARCH_STARTED",
+    "SEARCH_EMPTY",
+    "HOLD_FAILED",
+    "BOOKING_CONFIRMED",
+    "BOOKING_CANCELLED",
+  ]),
+  sessionId: z.string().min(8).max(100),
+  organizationId: z.string().min(1).optional(),
+  resourceId: z.string().min(1).optional(),
+});

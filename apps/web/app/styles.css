@@ -18,6 +18,22 @@ a {
   color: inherit;
   text-decoration: none;
 }
+.skip-link {
+  position: fixed;
+  left: 12px;
+  top: -80px;
+  z-index: 10;
+  background: var(--ink);
+  color: white;
+  padding: 12px;
+}
+.skip-link:focus {
+  top: 12px;
+}
+:focus-visible {
+  outline: 3px solid #365f00;
+  outline-offset: 3px;
+}
 main {
   width: min(1180px, calc(100% - 40px));
   margin: auto;
@@ -128,9 +144,22 @@ select {
 .danger {
   background: #8f1d14;
 }
+.recommendations {
+  margin: 0;
+  padding-left: 22px;
+}
 .list {
   display: grid;
   gap: 10px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }
 .list article {
   border: 1px solid var(--line);

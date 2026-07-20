@@ -2,8 +2,11 @@ import { serve } from "@hono/node-server";
 import { createClient } from "redis";
 import { createApp } from "./app.js";
 import { parseEnvironment } from "./env.js";
+import { Metrics } from "./infra/metrics.js";
 import { PrismaAdminRepository } from "./modules/admin/prisma-repository.js";
 import { AdminService } from "./modules/admin/service.js";
+import { PrismaAnalyticsRepository } from "./modules/analytics/prisma-repository.js";
+import { AnalyticsService } from "./modules/analytics/service.js";
 import { PrismaBookingRepository } from "./modules/bookings/prisma-repository.js";
 import { RedisHoldStore } from "./modules/bookings/redis-holds.js";
 import { BookingService } from "./modules/bookings/service.js";
@@ -13,8 +16,11 @@ import { PrismaCustomerRepository } from "./modules/customer/prisma-repository.j
 import { CustomerService } from "./modules/customer/service.js";
 import { PrismaIntegrationRepository } from "./modules/integrations/prisma-repository.js";
 import { IntegrationService } from "./modules/integrations/service.js";
+import { GeminiRecommendationProvider } from "./modules/recommendations/gemini.js";
+import { RecommendationService } from "./modules/recommendations/service.js";
 
 const environment = parseEnvironment(process.env);
+const metrics = new Metrics();
 const admin = new AdminService(new PrismaAdminRepository(), {
   record: (event) => console.info(JSON.stringify({ level: "info", ...event })),
 });
@@ -45,6 +51,20 @@ const integrations = new IntegrationService(
       console.info(JSON.stringify({ level: "info", ...event })),
   },
 );
+const analytics = new AnalyticsService(
+  new PrismaAnalyticsRepository(),
+  metrics,
+);
+const recommendationProvider = environment.GEMINI_API_KEY
+  ? new GeminiRecommendationProvider(
+      environment.GEMINI_API_KEY,
+      environment.GEMINI_MODEL,
+    )
+  : null;
+const recommendations = new RecommendationService(
+  recommendationProvider,
+  metrics,
+);
 serve({
   fetch: createApp({
     adminService: admin,
@@ -53,6 +73,10 @@ serve({
     customerService: customer,
     commercialService: commercial,
     integrationService: integrations,
+    analyticsService: analytics,
+    recommendationService: recommendations,
+    metrics,
+    operatorMetricsToken: environment.OPERATOR_METRICS_TOKEN,
   }).fetch,
   port: environment.PORT,
 });

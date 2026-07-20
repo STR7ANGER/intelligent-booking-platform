@@ -34,9 +34,9 @@ Complete tasks in order unless a dependency is explicitly removed. Each day has 
 - [x] 22. Design payment webhooks, reconciliation, calendar sync, and reminders; write acceptance criteria, contracts, risks, and the smallest vertical slice.
 - [x] 23. Implement payment webhooks, reconciliation, calendar sync, and reminders; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 - [x] 24. Verify payment webhooks, reconciliation, calendar sync, and reminders with tests, failure cases, telemetry, documentation, and a reviewable demo.
-- [ ] 25. Design Gemini slot recommendations, analytics, observability, and accessibility; write acceptance criteria, contracts, risks, and the smallest vertical slice.
-- [ ] 26. Implement Gemini slot recommendations, analytics, observability, and accessibility; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
-- [ ] 27. Verify Gemini slot recommendations, analytics, observability, and accessibility with tests, failure cases, telemetry, documentation, and a reviewable demo.
+- [x] 25. Design Gemini slot recommendations, analytics, observability, and accessibility; write acceptance criteria, contracts, risks, and the smallest vertical slice.
+- [x] 26. Implement Gemini slot recommendations, analytics, observability, and accessibility; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
+- [x] 27. Verify Gemini slot recommendations, analytics, observability, and accessibility with tests, failure cases, telemetry, documentation, and a reviewable demo.
 - [ ] 28. Design load/E2E tests, race-condition audit, seeded demo, and deployment docs; write acceptance criteria, contracts, risks, and the smallest vertical slice.
 - [ ] 29. Implement load/E2E tests, race-condition audit, seeded demo, and deployment docs; keep frontend, API, domain logic, workers, and persistence in their declared boundaries.
 - [ ] 30. Verify load/E2E tests, race-condition audit, seeded demo, and deployment docs with tests, failure cases, telemetry, documentation, and a reviewable demo.

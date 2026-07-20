@@ -12,6 +12,9 @@ const schema = z.object({
   SESSION_SECRET: z.string().min(32),
   ADMIN_API_KEY: z.string().min(32),
   PAYMENT_WEBHOOK_SECRET: z.string().min(32),
+  OPERATOR_METRICS_TOKEN: z.string().min(32),
+  GEMINI_API_KEY: z.string().default(""),
+  GEMINI_MODEL: z.string().default("gemini-2.5-flash"),
   DEFAULT_TIME_ZONE: z.string().refine((zone) => {
     try {
       new Intl.DateTimeFormat("en", { timeZone: zone });
