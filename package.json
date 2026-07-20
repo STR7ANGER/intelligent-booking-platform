@@ -18,7 +18,9 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
-    "slots:test": "cd services/availability && go test ./..."
+    "slots:test": "cd services/availability && go test ./...",
+    "test:e2e": "playwright test",
+    "test:load": "tsx scripts/load-smoke.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
@@ -26,6 +28,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
+    "@playwright/test": "^1.61.1",
     "@types/node": "^24.0.0",
     "prisma": "^6.19.0",
     "tsx": "^4.20.0",

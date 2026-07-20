@@ -15,6 +15,8 @@ jobs:
       - run: npm run check
       - run: npm run build
       - run: docker compose config --quiet
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
   availability:
     runs-on: ubuntu-latest
     steps:
@@ -22,3 +24,25 @@ jobs:
       - uses: actions/setup-go@v5
         with: { go-version: "1.24" }
       - run: cd services/availability && go test ./...
+  migration:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env: { POSTGRES_DB: booking, POSTGRES_USER: booking, POSTGRES_PASSWORD: booking }
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U booking -d booking"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      DATABASE_URL: postgresql://booking:booking@localhost:5432/booking?schema=public
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm }
+      - run: npm ci
+      - run: npm run db:generate
+      - run: npx prisma migrate deploy
+      - run: npm run db:seed
+      - run: npm run db:seed
+      - run: npx prisma migrate status

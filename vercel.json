@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build --workspace @booking/contracts && npm run build --workspace @booking/web",
+  "outputDirectory": "apps/web/.next",
+  "framework": "nextjs"
+}
